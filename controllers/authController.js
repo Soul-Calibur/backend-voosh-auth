@@ -15,7 +15,7 @@ exports.register = async (req, res) => {
             email,
             password
         });
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt();
         user.password = await bcrypt.hash(password, salt);
         await user.save();
 
@@ -27,7 +27,7 @@ exports.register = async (req, res) => {
         jwt.sign(
             payload,
             process.env.JWT_SECRET,
-            { expiresIn: 360000 },
+            { expiresIn: process.env.JWT_EXPIRY_TIME },
             (err, token) => {
                 if (err) throw err;
                 res.json({ token });
